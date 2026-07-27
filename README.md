@@ -20,3 +20,8 @@ Scapy
 Run with administrator/root privileges (required for raw packet operations like ARP scanning)
 
 Built and tested only on my own local network/lab environment. Only use this against systems and networks you own or have explicit permission to test.
+
+
+
+tags (ignore)
+python, network scanner, port scanner, beginner, beginner-project, scapy, socket
