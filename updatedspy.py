@@ -2,11 +2,13 @@ import socket
 import os
 import time
 import sys
+import psutil
 import ipaddress
 from scapy.all import *
 from pathlib import Path
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor 
+
 
 
 # if you see this, you can modify the ports to scan here 
@@ -68,10 +70,14 @@ def scan():
             localip = s.getsockname()[0]
             s.close()
 
-            iface = conf.route.route(localip)[0]
-            netmask = get_if_netmask(iface)
-            return str(ipaddress.IPv4Network(f"{localip}/{netmask}", strict=False))
-        except Exception:
+            for iface, addrs in psutil.net_if_addrs().items():
+                for addr in addrs:
+                    if addr.family == socket.AF_INET and addr.address == localip:
+                        netmask = addr.netmask
+                        return str(ipaddress.IPv4Network(f"{localip}/{netmask}", strict=False))
+            return "null"
+        except Exception as e:
+            print(f"Debug : {e}")
             return "null"            
     networksb = autosubnet()
     activation = True
